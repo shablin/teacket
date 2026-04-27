@@ -1,4 +1,5 @@
 import db from "@adonisjs/lucid/services/db"
+import { DateTime } from "luxon"
 
 export class TicketNumberGeneratorService {
   static async generate() {
