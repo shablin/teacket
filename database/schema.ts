@@ -15,7 +15,7 @@ export class CategorySchema extends BaseModel {
   @column()
   declare departmentId: number | null
   @column()
-  declare description: string
+  declare description: string | null
   @column({ isPrimary: true })
   declare id: number
   @column()
@@ -30,7 +30,7 @@ export class DepartmentSchema extends BaseModel {
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
   @column()
-  declare description: string
+  declare description: string | null
   @column({ isPrimary: true })
   declare id: number
   @column()
@@ -53,13 +53,13 @@ export class NotificationSchema extends BaseModel {
   @column()
   declare ticketId: number | null
   @column()
-  declare title: string | null
+  declare title: string
   @column()
-  declare type: string | null
+  declare type: string
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()
-  declare userId: number | null
+  declare userId: number
 }
 
 export class TicketAttachmentSchema extends BaseModel {
@@ -125,29 +125,6 @@ export class TicketHistorySchema extends BaseModel {
   declare updatedAt: DateTime | null
   @column()
   declare userId: number | null
-}
-
-export class TicketNotificationSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'message', 'readAt', 'ticketId', 'title', 'type', 'updatedAt', 'userId'] as const
-  $columns = TicketNotificationSchema.$columns
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime | null
-  @column({ isPrimary: true })
-  declare id: number
-  @column()
-  declare message: string | null
-  @column.dateTime()
-  declare readAt: DateTime | null
-  @column()
-  declare ticketId: number | null
-  @column()
-  declare title: string
-  @column()
-  declare type: string
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
-  @column()
-  declare userId: number
 }
 
 export class TicketSchema extends BaseModel {
