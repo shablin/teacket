@@ -62,6 +62,94 @@ export class NotificationSchema extends BaseModel {
   declare userId: number | null
 }
 
+export class TicketAttachmentSchema extends BaseModel {
+  static $columns = ['commentId', 'createdAt', 'fileName', 'filePath', 'id', 'mimeType', 'size', 'ticketId', 'updatedAt', 'userId'] as const
+  $columns = TicketAttachmentSchema.$columns
+  @column()
+  declare commentId: number | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare fileName: string
+  @column()
+  declare filePath: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare mimeType: string
+  @column()
+  declare size: bigint | number | null
+  @column()
+  declare ticketId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number | null
+}
+
+export class TicketCommentSchema extends BaseModel {
+  static $columns = ['content', 'createdAt', 'id', 'isInternal', 'ticketId', 'updatedAt', 'userId'] as const
+  $columns = TicketCommentSchema.$columns
+  @column()
+  declare content: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare isInternal: boolean
+  @column()
+  declare ticketId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
+export class TicketHistorySchema extends BaseModel {
+  static $columns = ['createdAt', 'field', 'id', 'newValue', 'oldValue', 'ticketId', 'updatedAt', 'userId'] as const
+  $columns = TicketHistorySchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column()
+  declare field: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare newValue: string | null
+  @column()
+  declare oldValue: string | null
+  @column()
+  declare ticketId: number
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number | null
+}
+
+export class TicketNotificationSchema extends BaseModel {
+  static $columns = ['createdAt', 'id', 'message', 'readAt', 'ticketId', 'title', 'type', 'updatedAt', 'userId'] as const
+  $columns = TicketNotificationSchema.$columns
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare message: string | null
+  @column.dateTime()
+  declare readAt: DateTime | null
+  @column()
+  declare ticketId: number | null
+  @column()
+  declare title: string
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number
+}
+
 export class TicketSchema extends BaseModel {
   static $columns = ['assigneeId', 'categoryId', 'closedAt', 'createdAt', 'departmentId', 'description', 'dueAt', 'id', 'number', 'priority', 'requesterId', 'status', 'title', 'updatedAt'] as const
   $columns = TicketSchema.$columns
