@@ -23,6 +23,6 @@ export default class NewAccountController {
     const user = await User.create({ ...payload })
 
     await auth.use('web').login(user)
-    response.redirect().toRoute('home')
+    response.redirect('/')
   }
 }
