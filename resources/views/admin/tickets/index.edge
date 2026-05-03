@@ -1,0 +1,31 @@
+@layout()
+    <section class="page-section">
+        <h1>Admin tickets</h1>
+        <div class="table-wrap compact-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Requester</th>
+                        <th>Assignee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @each(ticket in tickets)
+                        <tr>
+                            <td>{{ ticket.number }}</td>
+                            <td>{{ ticket.title }}</td>
+                            <td>{{ ticket.status }}</td>
+                            <td>{{ ticket.priority }}</td>
+                            <td>{{ ticket.requester?.fullName || ticket.requeser?.email }}</td>
+                            <td>{{ ticket.assignee?.fullName || '-' }}</td>
+                        </tr>
+                    @end
+                </tbody>
+            </table>
+        </div>
+    </section>
+@end
