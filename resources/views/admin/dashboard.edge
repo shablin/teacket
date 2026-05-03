@@ -1,0 +1,47 @@
+@layout()
+    <section class="page-section">
+        <h1>Admin dashboards</h1>
+        <div class="cards cards-compact">
+            <div>
+                <h3>Users</h3>
+                <p>{{ stats.users }}</p>
+            </div>
+
+            <div>
+                <h3>Open tickets</h3>
+                <p>{{ stats.openTickets }}</p>
+            </div>
+
+            <div>
+                <h3>Closed tickets</h3>
+                <p>{{ stats.closedTickets }}</p>
+            </div>
+
+            <h2>Recent tickets</h2>
+            <div class="table-wrap compact-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Requester</th>
+                            <th>Assignee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @each(ticket in recentTickets)
+                            <tr>
+                                <td>{{ ticket.number }}</td>
+                                <td>{{ ticket.title }}</td>
+                                <td>{{ ticket.status }}</td>
+                                <td>{{ ticket.requester?.fullName || ticket.requester?.email }}</td>
+                                <td>{{ ticket.assignee?.fullName || '-' }}</td>
+                            </tr>
+                        @end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+@end
