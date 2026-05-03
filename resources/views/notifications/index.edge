@@ -1,0 +1,23 @@
+@layout()
+    <section class="page-section">
+        <h1>Notifications</h1>
+        <ul class="stack-list">
+            @each(notification in notifications)
+                <li>
+                    <strong>{{ notification.title }}</strong>
+                    <p>{{ notification.message }}</p>
+                    <small class="muted">{{ notifications.createdAt.toRelative() }}</small>
+                    @if(!notification.readAt)
+                        <form
+                            action="{{ route('notifications.mark_as_read', { id: notification.id }) }}"
+                            method="post"
+                            class="inline-form"
+                        >
+                            <button type="submit">Mark as read</button>
+                        </form>
+                    @endif
+                </li>
+            @end
+        </ul>
+    </section>
+@end
