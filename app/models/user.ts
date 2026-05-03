@@ -2,7 +2,7 @@ import { UserSchema } from '#database/schema'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import { hasMany } from '@adonisjs/lucid/orm'
+import { column, hasMany } from '@adonisjs/lucid/orm'
 import Ticket from './ticket.ts'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import TicketComment from './ticket_comment.ts'
@@ -16,6 +16,9 @@ import Notification from './notification.ts'
  * through the withAuthFinder mixin.
  */
 export default class User extends compose(UserSchema, withAuthFinder(hash)) {
+  @column()
+  declare role: string
+  
   @hasMany(() => Ticket, { foreignKey: 'requesterId' })
   declare requestedTickets: HasMany<typeof Ticket>
 

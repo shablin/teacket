@@ -238,18 +238,18 @@ export default class TicketsController {
     }
 
     private canAssign(user: User | null) {
-        // TODO: User role
+        return !!user && ['admin', 'agent', 'manager'].includes(user.role)
     }
 
     private canTransition(user: User | null) {
-        // TODO: User role
+        return !!user && ['admin', 'agent', 'manger'].includes(user.role)
     }
 
     private canClose(user: User | null) {
-        // TODO: User role
+        return !!user && ['admin', 'agent', 'manager'].includes(user.role)
     }
 
-    private canEdit(user: User | null) {
-        // TODO: User role
+    private canEdit(user: User | null, ticket: Ticket) {
+        return !!user && (user.id === ticket.requesterId || this.canAssign(user))
     }
 }
