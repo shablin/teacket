@@ -8,6 +8,15 @@
     <div>
       <nav>
         @if(auth.user)
+          @!link({ route: 'tickets.list', text: 'Tickets' })
+          @!link({ route: 'dashboard', text: 'Dashboard' })
+          @!link({ route: 'notifications.index', text: 'Notifications' })
+          @!link({ route: 'profile', text: 'Profile' })
+
+          @if(['admin', 'manager'].includes(auth.user.role))
+            @!link({ route: 'admin.dashboard', text: 'Admin' })
+          @end
+          
           @!avatar({ initials: auth.user.initials })
           @form({ route: 'session.destroy', method: 'POST' })
             @!button({ text: 'Logout' })
