@@ -4,6 +4,16 @@
  */
 
 export const controllers = {
+  admin: {
+    Dashboard: () => import('#controllers/admin/dashboard_controller'),
+    Tickets: () => import('#controllers/admin/tickets_controller'),
+    Users: () => import('#controllers/admin/users_controller'),
+  },
+  Dashboard: () => import('#controllers/dashboard_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
+  Notifications: () => import('#controllers/notifications_controller'),
   Session: () => import('#controllers/session_controller'),
+  TicketAttachments: () => import('#controllers/ticket_attachments_controller'),
+  TicketComments: () => import('#controllers/ticket_comments_controller'),
+  Tickets: () => import('#controllers/tickets_controller'),
 }
