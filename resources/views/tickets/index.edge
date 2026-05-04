@@ -1,0 +1,62 @@
+@layout()
+    <section class="page-section">
+        <div class="section-header">
+            <h1>Tickets</h1>
+            <a class="button-link" href="{{ route('tickets.create') }}">Create ticket</a>
+        </div>
+
+        <form method="GET" class="inline-form compact-form">
+            <select name="status">
+                <option value="">All statuses</option>
+                @each(ticketStatus in statuses)
+                    <option value="{{ ticketStatus }}">{{ ticketStatus }}</option>
+                @end
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+
+        <div class="table-wrap compact-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Requester</th>
+                        <th>Assignee</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @each(ticket in tickets)
+                        <tr>
+                            <td>{{ ticket.number }}</td>
+                            <td>{{ ticket.title }}</td>
+                            <td><span class="status-chip">{{ ticket.status }}</span></td>
+                            <td>{{ ticket.priority }}</td>
+                            <td>{{ ticket.requester?.fullName || ticket.requester?.email }}</td>
+                            <td>{{ ticket.assignee?.fullName || '—' }}</td>
+                            <td>{{ ticket.createdAt.toFormat('dd LLL yyyy') }}</td>
+                            <td><a href="{{ route('tickets.show', { id: ticket.id }) }}">View</a></td>
+                        </tr>
+                    @end
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <span>Page {{ tickets.currentPage }} / {{ tickets.lastPage }}</span>
+            <div>
+                @if(tickets.hasPages)
+                    @if(tickets.currentPage > 1)
+                        <a href="{{ route('tickets.list') }}?page={{ tickets.currentPage - 1 }}">Previous</a>
+                    @end
+                    @if(tickets.currentPage < tickets.lastPage)
+                        <a href="{{ route('tickets.list') }}?page={{ tickets.currentPage + 1 }}">Next</a>
+                    @end
+                @end
+            </div>
+        </div>
+    </section>
+@end
