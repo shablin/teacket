@@ -1,0 +1,45 @@
+@layout()
+    <section class="page-section">
+        <h1>Create ticket</h1>
+        <form
+            action="{{ route('tickets.store') }}"
+            method="post"
+            class="compact-form"
+        >
+            <label>Title <input name="title" required /></label>
+            <label>Description <textarea name="description"></textarea></label>
+            <label>
+                Priority
+                <select name="priority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+            </label>
+            <label>
+                Category
+                <select name="categoryId">
+                    <option value="">None</option>
+                    @each(category in categories)
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    @end
+                </select>
+            </label>
+            <label>
+                Department
+                <select name="departmentId">
+                    <option value="">None</option>
+                    @each(department in departments)
+                        <option value="{{ department.id }}">{{ department.name }}</option>
+                    @end
+                </select>
+            </label>
+            <label>
+                Due to date
+                <input type="date" name="dueAt" />
+                <button type="submit">Create</button>
+            </label>
+        </form>
+    </section>
+@end
