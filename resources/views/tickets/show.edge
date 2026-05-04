@@ -1,0 +1,66 @@
+@layout()
+    <section class="page-section">
+        <div class="section-header">
+            <h1>{{ ticket.number }} — {{ ticket.title }}</h1>
+            <a class="button-link" href="{{ route('tickets.edit', { id: ticket.id }) }}">Edit</a>
+        </div>
+
+        <p class="muted">Status: <strong>{{ ticket.status }}</strong> · Priority: <strong>{{ ticket.priority }}</strong></p>
+        <p>{{ ticket.description || 'No description' }}</p>
+
+        <div class="actions-grid">
+            @if(canAssign)
+                <form action="{{ route('tickets.assign', { id: ticket.id }) }}" method="POST" class="inline-form compact-form">
+                    <label>Assign to user id <input name="assigneeId" type="number" required /></label>
+                    <button type="submit">Assign</button>
+                </form>
+            @end
+
+            @if(canTransition)
+                <form action="{{ route('tickets.transition', { id: ticket.id }) }}" method="POST" class="inline-form compact-form">
+                    <label>Change status
+                        <select name="status">@each(status in statuses)<option value="{{ status }}">{{ status }}</option>@end</select>
+                    </label>
+                    <button type="submit">Apply</button>
+                </form>
+            @end
+        </div>
+
+        <h2>Comments</h2>
+        <form action="{{ route('ticket_comments.store', { ticketId: ticket.id }) }}" method="POST" class="compact-form">
+            <textarea name="content" required placeholder="Leave a comment"></textarea>
+            @if(canAssign)
+                <label><input type="checkbox" name="isInternal" value="true" /> Internal note</label>
+            @end
+            <button type="submit">Add comment</button>
+        </form>
+
+        <ul class="stack-list">
+            @each(comment in comments)
+                <li>
+                    <strong>{{ comment.user.fullName || comment.user.email }}</strong>
+                    <span class="muted">{{ comment.createdAt.toRelative() }}</span>
+                    <p>{{ comment.content }}</p>
+                </li>
+            @end
+        </ul>
+
+        <h2>Attachments</h2>
+            <form action="{{ route('ticket_attachments.store', { ticketId: ticket.id }) }}" method="POST" enctype="multipart/form-data" class="inline-form compact-form">
+                <input type="file" name="attachment" required />
+                <button type="submit">Upload</button>
+            </form>
+        <ul class="stack-list">
+            @each(attachment in ticket.attachments)
+                <li>{{ attachment.fileName }} · {{ attachment.mimeType }} · {{ attachment.size || 0 }} bytes</li>
+            @end
+        </ul>
+
+        <h2>Recent history</h2>
+        <ul class="stack-list">
+            @each(event in history)
+                <li>{{ event.field }}: {{ event.oldValue || '—' }} → {{ event.newValue || '—' }} <span class="muted">{{ event.createdAt.toRelative() }}</span></li>
+            @end
+        </ul>
+    </section>
+@end
