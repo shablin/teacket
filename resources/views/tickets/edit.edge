@@ -1,0 +1,55 @@
+@layout()
+    <section class="page-section">
+        <h1>Edit {{ ticket.number }}</h1>
+        <form
+            action="{{ route('tickets.update', { id: ticket.id }) }}"
+            method="POST"
+            class="compact-form"
+        >
+            <label>
+                Title
+                <input name="title" value="{{ ticket.title }}" required />
+            </label>
+            
+            <label>
+                Description
+                <textarea name="description">{{ ticket.description }}</textarea>
+            </label>
+            
+            <label>
+                Priority
+                <select name="priority">
+                    @each(priority in ['low', 'medium', 'high', 'urgent'])
+                        <option value="{{ priority }}" selected>{{ priority }}</option>
+                    @end
+                </select>
+            </label>
+            
+            <label>
+                Category
+                <select name="categoryId">
+                    <option value="">No category</option>
+                        @each(category in categories)
+                            <option value="{{ category.id }}" selected>{{ category.name }}</option>
+                        @end
+                </select>
+            </label>
+            
+            <label>
+                Department
+                <select name="departmentId">
+                    <option value="">No department</option>
+                    @each(department in departments)
+                        <option value="{{ department.id }}"selected>{{ department.name }}</option>
+                    @end
+                </select>
+            </label>
+
+            <label>
+                Due date
+                <input type="date" name="dueAt" value="{{ ticket.dueAt ? ticket.dueAt.toISODate() : '' }}" />
+            </label>
+            <button type="submit">Update</button>
+        </form>
+    </section>
+@end
