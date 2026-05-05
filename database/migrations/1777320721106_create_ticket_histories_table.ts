@@ -16,22 +16,22 @@ export default class extends BaseSchema {
         .onDelete('CASCADE')
 
       table
-        .integer('user_id')
+        .integer('actor_id')
         .unsigned()
         .references('id')
         .inTable('users')
         .onDelete('SET NULL')
         .nullable()
 
-      table.string('field', 120).notNullable()
-      table.text('old_value').nullable()
-      table.text('new_value').nullable()
+      table.string('event_type', 80).notNullable()
+      table.text('before_state').nullable()
+      table.text('after_state').nullable()
 
       table.timestamp('created_at')
-      table.timestamp('updated_at')
 
       table.index(['ticket_id'])
-      table.index(['user_id'])
+      table.index(['actor_id'])
+      table.index(['event_type'])
       table.index(['created_at'])
     })
   }

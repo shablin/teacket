@@ -107,24 +107,22 @@ export class TicketCommentSchema extends BaseModel {
 }
 
 export class TicketHistorySchema extends BaseModel {
-  static $columns = ['createdAt', 'field', 'id', 'newValue', 'oldValue', 'ticketId', 'updatedAt', 'userId'] as const
+  static $columns = ['actorId', 'afterState', 'beforeState', 'createdAt', 'eventType', 'id', 'ticketId'] as const
   $columns = TicketHistorySchema.$columns
+  @column()
+  declare actorId: number | null
+  @column()
+  declare afterState: string | null
+  @column()
+  declare beforeState: string | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column()
-  declare field: string
+  declare eventType: string
   @column({ isPrimary: true })
   declare id: number
   @column()
-  declare newValue: string | null
-  @column()
-  declare oldValue: string | null
-  @column()
   declare ticketId: number
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
-  @column()
-  declare userId: number | null
 }
 
 export class TicketSchema extends BaseModel {
