@@ -56,11 +56,19 @@ router
     router
       .post('tickets/:ticketId/comments', [controllers.TicketComments, 'store'])
       .as('ticket_comments.store')
+    
+    router
+      .post('tickets/:ticketId/comments/:id/delete', [controllers.TicketComments, 'destroy'])
+      .as('ticket_comments.destroy')
 
     router
       .post('tickets/:ticketId/attachments', [controllers.TicketAttachments, 'store'])
       .as('ticket_attachments.store')
 
+    router
+      .post('tickets/:ticketId/attachments/:id/delete', [controllers.TicketAttachments, 'destroy'])
+      .as('ticket_attachments.destroy')
+      
     router
       .get('notifications', [controllers.Notifications, 'index'])
       .as('notifications.index')
