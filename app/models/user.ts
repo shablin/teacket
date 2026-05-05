@@ -2,13 +2,14 @@ import { UserSchema } from '#database/schema'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import { column, hasMany } from '@adonisjs/lucid/orm'
+import { belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import Ticket from './ticket.ts'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import TicketComment from './ticket_comment.ts'
 import TicketAttachment from './ticket_attachment.ts'
 import TicketHistory from './ticket_history.ts'
 import Notification from './notification.ts'
+import Department from './department.ts'
 
 /**
  * User model represents a user in the application.
@@ -19,6 +20,15 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   @column()
   declare role: string
   
+  @column()
+  declare departmentId: number | null
+
+  @column()
+  declare isActive: boolean
+
+  @belongsTo(() => Department)
+  declare department: BelongsTo<typeof Department>
+
   @hasMany(() => Ticket, { foreignKey: 'requesterId' })
   declare requestedTickets: HasMany<typeof Ticket>
 
