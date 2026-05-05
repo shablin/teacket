@@ -5,6 +5,7 @@ import Ticket from '#models/ticket'
 import TicketComment from '#models/ticket_comment'
 import TicketHistory from '#models/ticket_history'
 import User from '#models/user'
+import TicketPolicy from '#policies/ticket_policy'
 import { createTicketValidator, updateTicketValidator } from '#validators/ticket'
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
@@ -35,7 +36,12 @@ export default class TicketsController {
         })
     }
 
-    async create({ view }: HttpContext) {
+    async create({ view, auth, response, session }: HttpContext) {
+        if (!TicketPolicy.create(auth.user!)) {
+            session.flash('error', 'you cannot create tickets')
+            return response.redirect('/tickets')
+        }
+
         const [categories, departments] = await Promise.all([
             Category.query().orderBy('name', 'asc'),
             Department.query().orderBy('name', 'asc'),
@@ -45,6 +51,11 @@ export default class TicketsController {
     }
 
     async store({ request, response, auth, session }: HttpContext) {
+        if (!TicketPolicy.create(auth.user!)) {
+            session.flash('error', 'you cannot create tickets')
+            return response.redirect('/tickets')
+        }
+
         const payload = await request.validateUsing(createTicketValidator)
 
         const ticket = await Ticket.create({
@@ -70,7 +81,7 @@ export default class TicketsController {
         return response.redirect(`/tickets/${ticket.id}`)
     }
 
-    async show({ params, view, auth }: HttpContext) {
+    async show({ params, view, auth, response, session }: HttpContext) {
         const ticket = await Ticket.query()
             .where('id', params.id)
             .preload('requester')
@@ -91,22 +102,27 @@ export default class TicketsController {
             .orderBy('createdAt', 'desc')
             .limit(20)
         
+        if (!TicketPolicy.view(auth.user!, ticket)) {
+            session.flash('error', 'you cannot view this ticket')
+            return response.redirect('/tickets')
+        }
+
         return view.render('tickets/show', {
             ticket,
             comments,
             history,
             statuses: ['open', 'in_progress', 'pending', 'resolved', 'closed', 'canceled'],
-            canAssign: this.canAssign(auth.user ?? null),
-            canTransition: this.canTransition(auth.user ?? null),
-            canClose: this.canClose(auth.user ?? null),
+            canAssign: TicketPolicy.assign(auth.user!),
+            canTransition: TicketPolicy.changeStatus(auth.user!, ticket),
+            canClose: TicketPolicy.changeStatus(auth.user!, ticket),
         })
     }
 
     async edit({ params, view, auth, response, session }: HttpContext) {
         const ticket = await Ticket.findOrFail(params.id)
         
-        if (!this.canEdit(auth.user ?? null, ticket)) {
-            session.flash('error', 'You cannot edit this ticket')
+        if (!TicketPolicy.update(auth.user!, ticket)) {
+            session.flash('error', 'you cannot edit this ticket')
             return response.redirect(`/tickets/${ticket.id}`)
         }
 
@@ -120,9 +136,9 @@ export default class TicketsController {
 
     async update({ params, request, response, auth, session }: HttpContext) {
         const ticket = await Ticket.findOrFail(params.id)
-        
-        if (!this.canEdit(auth.user ?? null, ticket)) {
-            session.flash('error', 'You cannot update this ticket')
+
+        if (!TicketPolicy.update(auth.user!, ticket)) {
+            session.flash('error', 'you cannot update this ticket')
             return response.redirect(`/tickets/${ticket.id}`)
         }
 
@@ -157,8 +173,8 @@ export default class TicketsController {
     async assign({ params, request, response, auth, session }: HttpContext) {
         const ticket = await Ticket.findOrFail(params.id)
 
-        if (!this.canAssign(auth.user ?? null)) {
-            session.flash('error', 'You cannot assign tickets')
+        if (!TicketPolicy.assign(auth.user!)) {
+            session.flash('error', 'you cannot assign ticket')
             return response.redirect().back()
         }
 
@@ -197,8 +213,13 @@ export default class TicketsController {
             'resolved', 'closed', 'canceled'
         ]
 
-        if (!this.canTransition(auth.user ?? null) || !allowedStatuses.includes(newStatus)) {
-            session.flash('error', 'Invalid status transition request')
+        const isReopen = ticket.status === 'closed' && newStatus === 'open'
+        const hasAccess = isReopen
+            ? TicketPolicy.reopen(auth.user!, ticket)
+            : TicketPolicy.changeStatus(auth.user!, ticket)
+
+        if (!hasAccess || !allowedStatuses.includes(newStatus)) {
+            session.flash('error', 'invalid status transition req')
             return response.redirect().back()
         }
 
@@ -235,21 +256,5 @@ export default class TicketsController {
                 fullName: user.fullName || user.email,
             }))
         )
-    }
-
-    private canAssign(user: User | null) {
-        return !!user && ['admin', 'agent', 'manager'].includes(user.role)
-    }
-
-    private canTransition(user: User | null) {
-        return !!user && ['admin', 'agent', 'manger'].includes(user.role)
-    }
-
-    private canClose(user: User | null) {
-        return !!user && ['admin', 'agent', 'manager'].includes(user.role)
-    }
-
-    private canEdit(user: User | null, ticket: Ticket) {
-        return !!user && (user.id === ticket.requesterId || this.canAssign(user))
     }
 }
