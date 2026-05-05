@@ -2,10 +2,17 @@ import app from '@adonisjs/core/services/app'
 import Ticket from '#models/ticket'
 import type { HttpContext } from '@adonisjs/core/http'
 import TicketAttachment from '#models/ticket_attachment'
+import TicketPolicy from '#policies/ticket_policy'
 
 export default class TicketAttachmentsController {
     async store({ params, request, response, auth, session }: HttpContext) {
         const ticket = await Ticket.findByOrFail(params.ticketId)
+
+        if (!TicketPolicy.attach(auth.user!, ticket)) {
+            session.flash('error', 'you cannot attach files to this ticket')
+            response.redirect(`/tickets/${ticket.id}`)
+        }
+
         const file = request.file('attachment', {
             size: '10mb',
         })
