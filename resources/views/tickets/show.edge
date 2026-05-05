@@ -63,7 +63,23 @@
         <ul class="stack-list">
             @each(attachment in ticket.attachments)
                 <li>
-                    {{ attachment.fileName }} · {{ attachment.mimeType }} · {{ attachment.size || 0 }} bytes
+                    <a href="{{
+                        route('ticket_attachments.show', {
+                            ticketId: ticket.id,
+                            id: attachment.id
+                        })}}"
+                    >
+                        {{ attachment.fileName }}
+                    </a>
+                    · {{ attachment.mimeType }} · {{ attachment.size || 0 }} bytes
+                    · <a href="{{
+                        route('ticket_attachments.preview', {
+                            ticketId: ticket.id,
+                            id: attachment.id
+                        })}}"
+                        
+                        target="_blank"
+                        rel="noopener">Preview</a>
                     <form
                         action="{{
                             route('ticket_attachments.destroy', {
