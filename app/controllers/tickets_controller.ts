@@ -75,6 +75,14 @@ export default class TicketsController {
             message: ticket.title,
         })
 
+        await TicketHistory.create({
+            ticketId: ticket.id,
+            actorId: auth.user!.id,
+            eventType: 'created',
+            beforeState: null,
+            afterState: JSON.stringify({ status: ticket.status, title: ticket.title })
+        })
+
         session.flash('success', 'Ticket created')
         return response.redirect(`/tickets/${ticket.id}`)
     }
@@ -157,12 +165,20 @@ export default class TicketsController {
         if (previousStatus !== ticket.status) {
             await TicketHistory.create({
                 ticketId: ticket.id,
-                userId: auth.user!.id,
-                field: 'status',
-                oldValue: previousStatus,
-                newValue: ticket.status,
+                actorId: auth.user!.id,
+                eventType: 'status_changed',
+                beforeState: previousStatus,
+                afterState: ticket.status,
             })
         }
+
+        await TicketHistory.create({
+            ticketId: ticket.id,
+            actorId: auth.user!.id,
+            eventType: 'updated',
+            beforeState: null,
+            afterState: JSON.stringify({ title: ticket.title, priority: ticket.priority })
+        })
 
         session.flash('success', 'Ticket updated')
         return response.redirect(`/tickets/${ticket.id}`)
@@ -185,10 +201,10 @@ export default class TicketsController {
 
         await TicketHistory.create({
             ticketId: ticket.id,
-            userId: auth.user!.id,
-            field: 'assignee_id',
-            oldValue: oldAssignee ? String(oldAssignee) : null,
-            newValue: String(assignee.id),
+            actorId: auth.user!.id,
+            eventType: 'assigned',
+            beforeState: oldAssignee ? String(oldAssignee) : null,
+            afterState: String(assignee.id),
         })
 
         await Notification.create({
@@ -225,10 +241,10 @@ export default class TicketsController {
 
         await TicketHistory.create({
             ticketId: ticket.id,
-            userId: auth.user!.id,
-            field: 'status',
-            oldValue: oldStatus,
-            newValue: newStatus,
+            actorId: auth.user!.id,
+            eventType: 'status_changed',
+            beforeState: oldStatus,
+            afterState: newStatus,
         })
 
         await Notification.create({

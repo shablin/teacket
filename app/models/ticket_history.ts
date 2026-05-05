@@ -13,16 +13,16 @@ export default class TicketHistory extends TicketHistorySchema {
     declare ticketId: number
 
     @column()
-    declare userId: number | null
+    declare actorId: number | null
 
     @column()
-    declare field: string
+    declare eventType: string
 
     @column()
-    declare oldValue: string | null
+    declare beforeState: string | null
 
     @column()
-    declare newValue: string | null
+    declare afterState: string | null
 
     @column.dateTime({ autoCreate: true })
     declare createdAt: DateTime
@@ -30,6 +30,6 @@ export default class TicketHistory extends TicketHistorySchema {
     @belongsTo(() => Ticket)
     declare ticket: BelongsTo<typeof Ticket>
 
-    @belongsTo(() => User)
+    @belongsTo(() => User, { foreignKey: 'actorId' })
     declare user: BelongsTo<typeof User>
 }
