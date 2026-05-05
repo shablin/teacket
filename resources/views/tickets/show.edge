@@ -41,6 +41,16 @@
                     <strong>{{ comment.user.fullName || comment.user.email }}</strong>
                     <span class="muted">{{ comment.createdAt.toRelative() }}</span>
                     <p>{{ comment.content }}</p>
+                    <form
+                        action="{{
+                            route('ticket_comments.destroy', {
+                                ticketId: ticket.id,
+                                commentId: comment.id
+                            })}}"
+                        method="post"
+                    >
+                        <button type="submit">Delete comment</button>
+                    </form>
                 </li>
             @end
         </ul>
@@ -52,14 +62,29 @@
             </form>
         <ul class="stack-list">
             @each(attachment in ticket.attachments)
-                <li>{{ attachment.fileName }} · {{ attachment.mimeType }} · {{ attachment.size || 0 }} bytes</li>
+                <li>
+                    {{ attachment.fileName }} · {{ attachment.mimeType }} · {{ attachment.size || 0 }} bytes
+                    <form
+                        action="{{
+                            route('ticket_attachments.destroy', {
+                                ticketId: ticket.id,
+                                id: attachment.id
+                        })}}"
+                        method="post"
+                    >
+                        <button type="submit">Delete attachment</button>
+                    </form>
+                </li>
             @end
         </ul>
 
         <h2>Recent history</h2>
         <ul class="stack-list">
             @each(event in history)
-                <li>{{ event.field }}: {{ event.oldValue || '—' }} → {{ event.newValue || '—' }} <span class="muted">{{ event.createdAt.toRelative() }}</span></li>
+                <li>
+                    {{ event.eventType }}: {{ event.beforeState || '—' }} → {{ event.afterState || '—' }}
+                    <span class="muted">{{ event.createdAt.toRelative() }}</span>
+                </li>
             @end
         </ul>
     </section>
