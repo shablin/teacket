@@ -74,6 +74,6 @@ router
         router.get('dashboard', [controllers.admin.Dashboard, 'index']).as('admin.dashboard')
         router.get('tickets', [controllers.admin.Tickets, 'index']).as('admin.tickets.index')
         router.get('users', [controllers.admin.Users, 'index']).as('admin.users.index')
-      }).prefix('/admin')
+      }).prefix('/admin').use(middleware.adminGuard())
   })
   .use(middleware.auth())
