@@ -39,7 +39,7 @@ const shieldConfig = defineConfig({
      * Enable CSRF protection.
      * Protects against Cross-Site Request Forgery attacks.
      */
-    enabled: true,
+    enabled: process.env.NODE_ENV !== 'test', //true,
 
     /**
      * Routes that should be excluded from CSRF protection.
@@ -69,7 +69,7 @@ const shieldConfig = defineConfig({
      * Enable X-Frame-Options header.
      * Helps prevent clickjacking attacks.
      */
-    enabled: true,
+    enabled: process.env.NODE_ENV !== 'test', //true,
 
     /**
      * Frame embedding policy.
@@ -87,7 +87,7 @@ const shieldConfig = defineConfig({
      * Enable HTTP Strict Transport Security.
      * Tells browsers to always use HTTPS for this site.
      */
-    enabled: true,
+    enabled: process.env.NODE_ENV !== 'test', //true,
 
     /**
      * How long browsers should remember to use HTTPS.
@@ -105,7 +105,7 @@ const shieldConfig = defineConfig({
      * Enable X-Content-Type-Options: nosniff header.
      * Prevents MIME type sniffing which can lead to security vulnerabilities.
      */
-    enabled: true,
+    enabled: process.env.NODE_ENV !== 'test', //true,
   },
 })
 

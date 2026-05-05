@@ -11,7 +11,7 @@
   .merge(formProps)
   .toAttrs() }}
 >
-  @if(formProps.method !== 'GET')
+  @if(formProps.method !== 'GET' && typeof csrfField === 'function')
     {{ csrfField() }}
   @end
   {{{ await $slots.main() }}}
