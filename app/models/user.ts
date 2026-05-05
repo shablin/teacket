@@ -41,7 +41,7 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
   @hasMany(() => TicketAttachment)
   declare attachments: HasMany<typeof TicketAttachment>
 
-  @hasMany(() => TicketHistory)
+  @hasMany(() => TicketHistory, { foreignKey: 'actorId' })
   declare historyEntries: HasMany<typeof TicketHistory>
 
   @hasMany(() => Notification)
