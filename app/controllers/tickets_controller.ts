@@ -6,6 +6,7 @@ import TicketComment from '#models/ticket_comment'
 import TicketHistory from '#models/ticket_history'
 import User from '#models/user'
 import TicketPolicy from '#policies/ticket_policy'
+import { TICKET_STATUSES, TicketStatusService } from '#services/ticket_status_service'
 import { createTicketValidator, updateTicketValidator } from '#validators/ticket'
 import type { HttpContext } from '@adonisjs/core/http'
 import { DateTime } from 'luxon'
@@ -28,10 +29,7 @@ export default class TicketsController {
         return view.render('tickets/index', {
             tickets,
             status,
-            statuses: [
-                'open', 'in_progress', 'pending',
-                'resolved', 'closed', 'canceled'
-            ],
+            statuses: TICKET_STATUSES,
             user: auth.user,
         })
     }
@@ -111,7 +109,7 @@ export default class TicketsController {
             ticket,
             comments,
             history,
-            statuses: ['open', 'in_progress', 'pending', 'resolved', 'closed', 'canceled'],
+            statuses: TICKET_STATUSES,
             canAssign: TicketPolicy.assign(auth.user!),
             canTransition: TicketPolicy.changeStatus(auth.user!, ticket),
             canClose: TicketPolicy.changeStatus(auth.user!, ticket),
@@ -208,24 +206,21 @@ export default class TicketsController {
     async transition({ params, request, response, auth, session }: HttpContext) {
         const ticket = await Ticket.findOrFail(params.id)
         const newStatus = request.input('status')
-        const allowedStatuses = [
-            'open', 'in_progress', 'pending',
-            'resolved', 'closed', 'canceled'
-        ]
 
-        const isReopen = ticket.status === 'closed' && newStatus === 'open'
-        const hasAccess = isReopen
-            ? TicketPolicy.reopen(auth.user!, ticket)
-            : TicketPolicy.changeStatus(auth.user!, ticket)
-
-        if (!hasAccess || !allowedStatuses.includes(newStatus)) {
+        if (!TicketStatusService.canTransition(auth.user!, ticket, newStatus)) {
             session.flash('error', 'invalid status transition req')
             return response.redirect().back()
         }
 
         const oldStatus = ticket.status
         ticket.status = newStatus
-        ticket.closedAt = newStatus === 'closed' ? DateTime.now() : null
+
+        if (newStatus === 'closed') {
+            ticket.closedAt = DateTime.now()
+        } else if (oldStatus === 'closed' && newStatus === 'open') {
+            ticket.closedAt = null
+        }
+
         await ticket.save()
 
         await TicketHistory.create({
