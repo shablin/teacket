@@ -10,7 +10,7 @@ export default class TicketAttachmentsController {
 
         if (!TicketPolicy.attach(auth.user!, ticket)) {
             session.flash('error', 'you cannot attach files to this ticket')
-            response.redirect(`/tickets/${ticket.id}`)
+            return response.redirect(`/tickets/${ticket.id}`)
         }
 
         const file = request.file('attachment', {
