@@ -72,5 +72,4 @@ teacket/
 ```
 
 ## See also
-- About roles & permissions
-- About API
+- [Roles & Permissions](https://github.com/shablin/teacket/blob/main/docs/permissions_and_roles.md)
