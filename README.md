@@ -1,5 +1,8 @@
 # teacket — A simple ticketing system for employees
 
+> [!warning]
+> Most functionality is still not implemented. Project under development!
+
 <p align="left">
     <img
         align="right"
