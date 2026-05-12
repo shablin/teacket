@@ -32,15 +32,24 @@ export default class TicketCommentsController {
             afterState: 'comment_created'
         })
 
-        if (ticket.requesterId !== auth.user!.id) {
-            await Notification.create({
-                userId: ticket.requesterId,
-                ticketId: ticket.id,
-                type: 'new_comment',
-                title: `New comment on ${ticket.number}`,
-                message: payload.content.slice(0, 120),
-            })
-        }
+        const recipientIds = new Set<number>([ticket.requesterId])
+        if (ticket.assigneeId) recipientIds.add(ticket.assigneeId)
+        recipientIds.delete(auth.user!.id)
+
+        await Promise.all(
+            Array.from(recipientIds).map((userId) =>
+                Notification.create({
+                    userId,
+                    type: 'new_comment',
+                    payload: {
+                        ticketId: ticket.id,
+                        ticketName: ticket.number,
+                        commentPreview: payload.content.slice(0, 120),
+                        commentByUserId: auth.user!.id,
+                    },
+                })
+            )
+        )
 
         session.flash('success', 'Comment added')
         return response.redirect(`/tickets/${ticket.id}`)

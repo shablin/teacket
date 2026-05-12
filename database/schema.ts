@@ -40,24 +40,18 @@ export class DepartmentSchema extends BaseModel {
 }
 
 export class NotificationSchema extends BaseModel {
-  static $columns = ['createdAt', 'id', 'message', 'readAt', 'ticketId', 'title', 'type', 'updatedAt', 'userId'] as const
+  static $columns = ['createdAt', 'id', 'payload', 'readAt', 'type', 'userId'] as const
   $columns = NotificationSchema.$columns
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column({ isPrimary: true })
   declare id: number
   @column()
-  declare message: string | null
+  declare payload: any | null
   @column.dateTime()
   declare readAt: DateTime | null
   @column()
-  declare ticketId: number | null
-  @column()
-  declare title: string
-  @column()
   declare type: string
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime | null
   @column()
   declare userId: number
 }

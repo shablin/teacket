@@ -19,6 +19,9 @@ export default class Notification extends NotificationSchema {
     declare type: string
 
     @column()
+    declare payload: string
+
+    @column()
     declare title: string
 
     @column()
