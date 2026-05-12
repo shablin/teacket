@@ -10,6 +10,19 @@
         @if(auth.user)
           @!link({ route: 'tickets.list', text: 'Tickets' })
           @!link({ route: 'dashboard', text: 'Dashboard' })
+          
+          @if(unreadNotificationsCount > 0)
+            @!link({
+              route: 'notifications.index',
+              text: `Notifications(${unreadNotificationsCount})`
+            })
+          @else
+            @!link({
+              route: 'notifications.index',
+              text: `Notifications`
+            })
+          @end
+
           @!link({ route: 'notifications.index', text: 'Notifications' })
           @!link({ route: 'profile', text: 'Profile' })
 
