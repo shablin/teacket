@@ -7,7 +7,6 @@ export default class NotificationsController {
         const notifications = await Notification.query()
             .where('userId', auth.user!.id)
             .orderBy('createdAt', 'desc')
-            .preload('ticket')
         
         return view.render('notifications/index', { notifications })
     }
