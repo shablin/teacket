@@ -92,8 +92,11 @@ export default class TicketsController {
             userId: auth.user!.id,
             ticketId: ticket.id,
             type: 'ticket_created',
-            title: `Ticket ${ticket.number} created`,
-            message: ticket.title,
+            payload: {
+                ticketId: ticket.id,
+                ticketNumber: ticket.number,
+                title: ticket.title,
+            }
         })
 
         await TicketHistory.create({
@@ -232,8 +235,12 @@ export default class TicketsController {
             userId: assignee.id,
             ticketId: ticket.id,
             type: 'ticket_assigned',
-            title: `You were assigned ticket ${ticket.number}`,
-            message: ticket.title,
+            payload: {
+                ticketId: ticket.id,
+                ticketNumber: ticket.number,
+                title: ticket.title,
+                assignedByUserId: auth.user!.id,
+            }
         })
 
         session.flash('success', 'Ticket assigned')
@@ -268,13 +275,25 @@ export default class TicketsController {
             afterState: newStatus,
         })
 
-        await Notification.create({
-            userId: ticket.requesterId,
-            ticketId: ticket.id,
-            type: 'status_changed',
-            title: `Ticket ${ticket.number} status changed`,
-            message: `New status: ${newStatus}`,
-        })
+        const recipientIds = new Set<number>([ticket.requesterId])
+        if (ticket.assigneeId) recipientIds.add(ticket.assigneeId)
+        recipientIds.delete(auth.user!.id)
+
+        await Promise.all(
+            Array.from(recipientIds).map((userId) =>
+                Notification.create({
+                    userId,
+                    type: newStatus === 'closed' ? 'ticket_closed' : 'status_changed',
+                    payload: {
+                        ticketId: ticket.id,
+                        ticketNumber: ticket.number,
+                        oldStatus,
+                        newStatus,
+                        changeByUserId: auth.user!.id,
+                    },
+                })
+            )
+        )
 
         session.flash('success', 'Ticket status updated')
         return response.redirect(`/tickets/${ticket.id}`)
