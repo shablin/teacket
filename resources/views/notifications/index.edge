@@ -4,8 +4,8 @@
         <ul class="stack-list">
             @each(notification in notifications)
                 <li>
-                    <strong>{{ notification.title }}</strong>
-                    <p>{{ notification.message }}</p>
+                    <strong>{{ notification.type }}</strong>
+                    <p>{{ JSON.stringify(notification.payload) }}</p>
                     <small class="muted">{{ notifications.createdAt.toRelative() }}</small>
                     @if(!notification.readAt)
                         <form
