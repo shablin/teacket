@@ -6,6 +6,7 @@ import TicketComment from '#models/ticket_comment'
 import TicketHistory from '#models/ticket_history'
 import User from '#models/user'
 import TicketPolicy from '#policies/ticket_policy'
+import { TicketQueryService } from '#services/ticket_query_service'
 import { TICKET_STATUSES, TicketStatusService } from '#services/ticket_status_service'
 import { createTicketValidator, updateTicketValidator } from '#validators/ticket'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -14,23 +15,43 @@ import { DateTime } from 'luxon'
 export default class TicketsController {
     async list({ view, request, auth }: HttpContext) {
         const page = Number(request.input('page', 1)) || 1
-        const status = request.input('status')
-        const query = Ticket.query()
-            .preload('requester')
-            .preload('assignee')
-            .preload('category')
-            .preload('department')
-            .orderBy('createdAt', 'desc')
+        const filters = {
+            number: request.input('number'),
+            status: request.input('status'),
+            priority: request.input('priority'),
+            categoryId: request.input('categoryId') ? Number(request.input('categoryId')) : null,
+            assigneeId: request.input('assigneeId') ? Number(request.input('assigneeId')) : null,
+            requesterId: request.input('requesterId') ? Number(request.input('requesterId')) : null,
+            departmentId: request.input('departmentId') ? Number(request.input('departmentId')) : null,
+            createdFrom: request.input('createdFrom'),
+            createdTo: request.input('createdTo'),
+            dueFrom: request.input('dueFrom'),
+            dueTo: request.input('dueTo'),
+            search: request.input('search'),
+            includeCommentSearch: request.input('includeCommentSearch') === '1',
+        }
 
-        if (status) query.where('status', status)
-        
-        const tickets = await query.paginate(page, 10)
+        const tickets = await TicketQueryService.build(filters).paginate(page, 10)
+        const [categories, departments, users] = await Promise.all([
+            Category.query().orderBy('name', 'asc'),
+            Department.query().orderBy('name', 'asc'),
+            User.query().orderBy('fullName', 'asc'),
+        ])
+
+        const queryString = request.qs()
+        delete queryString.page
 
         return view.render('tickets/index', {
             tickets,
-            status,
-            statuses: TICKET_STATUSES,
+            filters,
+            status: TICKET_STATUSES,
+            priorities: ['low', 'medium', 'high', 'urgent'],
+            categories,
+            departments,
+            users,
             user: auth.user,
+            filtersQueryString: new URLSearchParams(queryString as Record<string, string>)
+                                    .toString(),
         })
     }
 

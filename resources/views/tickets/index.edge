@@ -6,13 +6,131 @@
         </div>
 
         <form method="GET" class="inline-form compact-form">
+            <input
+                type="text"
+                name="search"
+                value="{{ filters.search || '' }}"
+                placeholder="Search in number, title, description..."
+            />
+
+            <input
+                type="text"
+                name="number"
+                value="{{ filters.number || '' }}"
+                placeholder="Ticket number"    
+            />
+
             <select name="status">
                 <option value="">All statuses</option>
                 @each(ticketStatus in statuses)
-                    <option value="{{ ticketStatus }}">{{ ticketStatus }}</option>
+                    <option
+                        value="{{ ticketStatus }}"
+                        selected="{{ filters.status === ticketStatus }}"
+                    >
+                        {{ ticketStatus }}
+                    </option>
                 @end
             </select>
+            <select name="priority">
+                <option value="">All priorities</option>
+                @each(priority in priorities)
+                    <option
+                        value="{{ priority }}"
+                        selected="{{ filters.priority === priority }}"
+                    >
+                        {{ priority }}
+                    </option>
+                @end
+            </select>
+            <select name="categoryId">
+                <option value="">All categories</option>
+                @each(category in categories)
+                    <option
+                        value="{{ category.id }}"
+                        selected="{{ String(filters.categoryId) === String(category.id) }}"
+                    >
+                        {{ category.name }}
+                    </option>
+                @end
+            </select>
+            <select name="departmentId">
+                <option value="">All departments</option>
+                @each(department in departments)
+                    <option
+                        value="{{ department.id }}"
+                        selected="{{ String(filters.departmentId) === String(department.id) }}"
+                    >
+                        {{ department.name }}
+                    </option>
+                @end
+            </select>
+            <select name="assigneeId">
+                <option value="">All assignees</option>
+                @each(assignee in users)
+                    <option
+                        value="{{ assignee.id }}"
+                        selected="{{ String(filters.assigneeId) === String(assignee.id) }}"
+                    >
+                        {{ assignee.fullName || assignee.email }}
+                    </option>
+                @end
+            </select>
+            <select name="requesterId">
+                <option value="">All requesters</option>
+                @each(requester in users)
+                    <option
+                        value="{{ requester.id }}"
+                        selected="{{ String(filters.requesterId) === String(requester.id) }}"
+                    >
+                        {{ requester.fullName || requester.email }}
+                    </option>
+                @end
+            </select>
+            
+            <label>
+                Created from
+                <input
+                    type="date"
+                    name="createdFrom"
+                    value="{{ filters.createdFrom || '' }}"
+                />
+            </label>
+            <label>
+                Created to
+                <input
+                    type="date"
+                    name="createdTo"
+                    value="{{ filters.createdTo || '' }}"
+                />
+            </label>
+            <label>
+                Due from
+                <input
+                    type="date"
+                    name="dueFrom"
+                    value="{{ filters.dueFrom || '' }}"
+                />
+            </label>
+            <label>
+                Due to
+                <input
+                    type="date"
+                    name="dueTo"
+                    value="{{ filters.dueTo || '' }}"
+                />
+            </label>
+
+            <label>
+                <input
+                    type="checkbox"
+                    name="includeCommentsSearch"
+                    value="1"
+                    checked="{{ Boolean(filters.includeCommentSearch) }}"
+                />
+                Search in comments...
+            </label>
             <button type="submit">Filter</button>
+            <a href="{{ route('ticket.list') }}">Reset</a>
         </form>
 
         <div class="table-wrap compact-table">
@@ -50,10 +168,16 @@
             <div>
                 @if(tickets.hasPages)
                     @if(tickets.currentPage > 1)
-                        <a href="{{ route('tickets.list') }}?page={{ tickets.currentPage - 1 }}">Previous</a>
+                        <a href="
+                            {{ route('tickets.list') }}?page={{ tickets.currentPage - 1 }}
+                            {{ filtersQueryString ? '&' + filtersQueryString : '' }}"
+                        >Previous</a>
                     @end
                     @if(tickets.currentPage < tickets.lastPage)
-                        <a href="{{ route('tickets.list') }}?page={{ tickets.currentPage + 1 }}">Next</a>
+                        <a href="
+                            {{ route('tickets.list') }}?page={{ tickets.currentPage + 1 }}
+                            {{ filtersQueryString ? '&' + filtersQueryString : '' }}"
+                        >Next</a>
                     @end
                 @end
             </div>
