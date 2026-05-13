@@ -1,6 +1,18 @@
 @let(variant = $props.get('variant') || 'default')
 @inject({ variant, autoDismiss: $props.get('autoDismiss') })
-@let(classes = ['alert', `alert-${variant}`])
+@let(variantClasses = {
+  default: 'border-slate-200 bg-white text-slate-700',
+  destructive: 'border-rose-300 bg-rose-50 text-rose-700',
+  success: 'border-emerald-300 bg-emerald-50 text-emerald-700'
+})
+  
+@let(classes = [
+  `pinter-events-auto w-full max-w-md
+  rounded-lg border px-4 py-3 text-sm
+  font-medium shadow-sm`,
+  variantClasses[variant] || variantClasess.default,
+])
+  {{-- ['alert', `alert-${variant}`]) --}}
 
 <div {{ $props
   .except(['variant', 'autoDismiss'])
