@@ -21,7 +21,9 @@ export type ScannedRoutes = {
     'tickets.assign': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tickets.transition': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'ticket_comments.store': { paramsTuple: [ParamValue]; params: {'ticketId': ParamValue} }
+    'ticket_comments.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'ticketId': ParamValue,'id': ParamValue} }
     'ticket_attachments.store': { paramsTuple: [ParamValue]; params: {'ticketId': ParamValue} }
+    'ticket_attachments.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'ticketId': ParamValue,'id': ParamValue} }
     'notifications.index': { paramsTuple?: []; params?: {} }
     'notifications.mark_as_read': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'admin.dashboard': { paramsTuple?: []; params?: {} }
@@ -67,7 +69,9 @@ export type ScannedRoutes = {
     'tickets.assign': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tickets.transition': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'ticket_comments.store': { paramsTuple: [ParamValue]; params: {'ticketId': ParamValue} }
+    'ticket_comments.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'ticketId': ParamValue,'id': ParamValue} }
     'ticket_attachments.store': { paramsTuple: [ParamValue]; params: {'ticketId': ParamValue} }
+    'ticket_attachments.destroy': { paramsTuple: [ParamValue,ParamValue]; params: {'ticketId': ParamValue,'id': ParamValue} }
     'notifications.mark_as_read': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
