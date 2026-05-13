@@ -39,8 +39,8 @@
           @end
           
           @!avatar({ initials: auth.user.initials, class: 'ml-6' })
-          @form({ route: 'session.destroy', method: 'POST' })
-            @!button({ text: 'Sign Out' })
+          @form({ route: 'session.destroy', method: 'POST', class: 'inline-flex' })
+            @!button({ text: 'Sign Out', class: 'bg-slate-200! text-slate-900! hover:bg-slate-300!'})
           @end
         @else
           @!link({ route: 'new_account.create', text: 'Sign Up' })
