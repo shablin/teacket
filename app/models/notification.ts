@@ -12,8 +12,8 @@ export default class Notification extends NotificationSchema {
     @column()
     declare userId: number
 
-    @column()
-    declare ticketId: number | null
+    // @column()
+    // declare ticketId: number | null
 
     @column()
     declare type: string
@@ -21,11 +21,11 @@ export default class Notification extends NotificationSchema {
     @column()
     declare payload: Record<string, unknown> | null
 
-    @column()
-    declare title: string
+    // @column()
+    // declare title: string
 
-    @column()
-    declare message: string | null
+    // @column()
+    // declare message: string | null
 
     @column.dateTime()
     declare readAt: DateTime | null
@@ -33,12 +33,12 @@ export default class Notification extends NotificationSchema {
     @column.dateTime({ autoCreate: true })
     declare createdAt: DateTime
 
-    @column.dateTime({ autoCreate: true, autoUpdate: true })
-    declare updatedAt: DateTime
+    // @column.dateTime({ autoCreate: true, autoUpdate: true })
+    // declare updatedAt: DateTime
     
     @belongsTo(() => User)
     declare user: BelongsTo<typeof User>
 
-    @belongsTo(() => Ticket)
-    declare ticket: BelongsTo<typeof Ticket>
+    // @belongsTo(() => Ticket)
+    // declare ticket: BelongsTo<typeof Ticket>
 }

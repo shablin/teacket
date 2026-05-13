@@ -1,5 +1,8 @@
 import Ticket from "#models/ticket"
 import User from "#models/user"
+import { DateTime } from "luxon"
+import { TicketAuditService } from "./ticket_audit_service.ts"
+import { TicketNotificationService } from "./ticket_notification_service.ts"
 
 export const TICKET_STATUSES = [
   'open',
@@ -74,5 +77,35 @@ export class TicketStatusService {
 
     const allowedTargets = ROLE_TRANSITIONS[role][fromStatus] ?? []
     return allowedTargets.includes(toStatus)
+  }
+
+  static async transition(ticket: Ticket, newStatus: string, actorId: number) {
+    const oldStatus = ticket.status
+    ticket.status = newStatus as TicketStatus
+
+    if (newStatus === 'closed') {
+      ticket.closedAt = DateTime.now()
+    } else if (oldStatus === 'closed' && newStatus === 'open') {
+      ticket.closedAt = null
+    }
+
+    await ticket.save()
+
+    await TicketAuditService.record(
+      ticket,
+      actorId,
+      'status_changed',
+      oldStatus,
+      newStatus
+    )
+
+    await TicketNotificationService.notifyStatusChanged(
+      ticket,
+      oldStatus,
+      newStatus,
+      actorId
+    )
+
+    return ticket
   }
 }

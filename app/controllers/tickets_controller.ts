@@ -6,6 +6,9 @@ import TicketComment from '#models/ticket_comment'
 import TicketHistory from '#models/ticket_history'
 import User from '#models/user'
 import TicketPolicy from '#policies/ticket_policy'
+import { TicketAssignmentService } from '#services/ticket_assignment_service'
+import { TicketAuditService } from '#services/ticket_audit_service'
+import { TicketCreationService } from '#services/ticket_creation_service'
 import { TicketQueryService } from '#services/ticket_query_service'
 import { TICKET_STATUSES, TicketStatusService } from '#services/ticket_status_service'
 import { createTicketValidator, updateTicketValidator } from '#validators/ticket'
@@ -77,34 +80,9 @@ export default class TicketsController {
 
         const payload = await request.validateUsing(createTicketValidator)
 
-        const ticket = await Ticket.create({
-            title: payload.title,
-            description: payload.description,
-            priority: payload.priority,
-            categoryId: payload.categoryId,
-            departmentId: payload.departmentId,
+        const ticket = await TicketCreationService.create({
+            ...payload,
             requesterId: auth.user!.id,
-            status: 'open',
-            dueAt: payload.dueAt ? DateTime.fromISO(payload.dueAt) : undefined
-        })
-
-        await Notification.create({
-            userId: auth.user!.id,
-            ticketId: ticket.id,
-            type: 'ticket_created',
-            payload: {
-                ticketId: ticket.id,
-                ticketNumber: ticket.number,
-                title: ticket.title,
-            }
-        })
-
-        await TicketHistory.create({
-            ticketId: ticket.id,
-            actorId: auth.user!.id,
-            eventType: 'created',
-            beforeState: null,
-            afterState: JSON.stringify({ status: ticket.status, title: ticket.title })
         })
 
         session.flash('success', 'Ticket created')
@@ -187,22 +165,24 @@ export default class TicketsController {
         await ticket.save()
 
         if (previousStatus !== ticket.status) {
-            await TicketHistory.create({
-                ticketId: ticket.id,
-                actorId: auth.user!.id,
-                eventType: 'status_changed',
-                beforeState: previousStatus,
-                afterState: ticket.status,
-            })
+            await TicketAuditService.record(
+                ticket, auth.user!.id,
+                'statuc_changed',
+                previousStatus,
+                ticket.status
+            )
         }
 
-        await TicketHistory.create({
-            ticketId: ticket.id,
-            actorId: auth.user!.id,
-            eventType: 'updated',
-            beforeState: null,
-            afterState: JSON.stringify({ title: ticket.title, priority: ticket.priority })
-        })
+        await TicketAuditService.record(
+            ticket,
+            auth.user!.id,
+            'updated',
+            null,
+            JSON.stringify({
+                title: ticket.title,
+                priority: ticket.priority
+            })
+        )
 
         session.flash('success', 'Ticket updated')
         return response.redirect(`/tickets/${ticket.id}`)
@@ -219,29 +199,7 @@ export default class TicketsController {
         const assigneeId = Number(request.input('assigneeId'))
         const assignee = await User.findOrFail(assigneeId)
 
-        const oldAssignee = ticket.assigneeId
-        ticket.assigneeId = assignee.id
-        await ticket.save()
-
-        await TicketHistory.create({
-            ticketId: ticket.id,
-            actorId: auth.user!.id,
-            eventType: 'assigned',
-            beforeState: oldAssignee ? String(oldAssignee) : null,
-            afterState: String(assignee.id),
-        })
-
-        await Notification.create({
-            userId: assignee.id,
-            ticketId: ticket.id,
-            type: 'ticket_assigned',
-            payload: {
-                ticketId: ticket.id,
-                ticketNumber: ticket.number,
-                title: ticket.title,
-                assignedByUserId: auth.user!.id,
-            }
-        })
+        await TicketAssignmentService.assign(ticket, assignee.id, auth.user!.id)
 
         session.flash('success', 'Ticket assigned')
         return response.redirect(`/tickets/${ticket.id}`)
@@ -256,44 +214,7 @@ export default class TicketsController {
             return response.redirect().back()
         }
 
-        const oldStatus = ticket.status
-        ticket.status = newStatus
-
-        if (newStatus === 'closed') {
-            ticket.closedAt = DateTime.now()
-        } else if (oldStatus === 'closed' && newStatus === 'open') {
-            ticket.closedAt = null
-        }
-
-        await ticket.save()
-
-        await TicketHistory.create({
-            ticketId: ticket.id,
-            actorId: auth.user!.id,
-            eventType: 'status_changed',
-            beforeState: oldStatus,
-            afterState: newStatus,
-        })
-
-        const recipientIds = new Set<number>([ticket.requesterId])
-        if (ticket.assigneeId) recipientIds.add(ticket.assigneeId)
-        recipientIds.delete(auth.user!.id)
-
-        await Promise.all(
-            Array.from(recipientIds).map((userId) =>
-                Notification.create({
-                    userId,
-                    type: newStatus === 'closed' ? 'ticket_closed' : 'status_changed',
-                    payload: {
-                        ticketId: ticket.id,
-                        ticketNumber: ticket.number,
-                        oldStatus,
-                        newStatus,
-                        changeByUserId: auth.user!.id,
-                    },
-                })
-            )
-        )
+        await TicketStatusService.transition(ticket, newStatus, auth.user!.id)
 
         session.flash('success', 'Ticket status updated')
         return response.redirect(`/tickets/${ticket.id}`)
