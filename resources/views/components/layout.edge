@@ -9,9 +9,20 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('dumper')
   </head>
-  <body>
+  <body class="min-h-full font-sans text-slate-900 antialiased">
     @include('partials/header')
-    <main>
+    <main
+      class="
+        mx-auto
+        min-h-[calc(100vh-5rem)]
+        w-full
+        max-w-7x1
+        px-4
+        pb-10
+        pt-6
+        sm:px-6
+        lg:px-8"
+    >
       @include('partials/flash_alerts')
       {{{ await $slots.main() }}}
     </main>
