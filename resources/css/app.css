@@ -1,3 +1,6 @@
+@import "tailwindcss";
+@source "../views";
+
 :root {
   --gray-1: oklch(98.5% 0 0);
   --gray-2: oklch(97% 0 0);
