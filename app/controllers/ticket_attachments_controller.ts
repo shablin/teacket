@@ -11,7 +11,7 @@ import { mkdir, rm } from 'node:fs/promises'
 
 export default class TicketAttachmentsController {
     async store({ params, request, response, auth, session }: HttpContext) {
-        const ticket = await Ticket.findByOrFail(params.ticketId)
+        const ticket = await Ticket.findOrFail(params.ticketId)
 
         if (!TicketPolicy.attach(auth.user!, ticket)) {
             session.flash('error', 'you cannot attach files to this ticket')
