@@ -40,11 +40,11 @@
           
           @!avatar({ initials: auth.user.initials })
           @form({ route: 'session.destroy', method: 'POST' })
-            @!button({ text: 'Logout' })
+            @!button({ text: 'Sign Out' })
           @end
         @else
-          @!link({ route: 'new_account.create', text: 'Signup' })
-          @!link({ route: 'session.create', text: 'Login' })
+          @!link({ route: 'new_account.create', text: 'Sign Up' })
+          @!link({ route: 'session.create', text: 'Sign In' })
         @end
       </nav>
     </div>

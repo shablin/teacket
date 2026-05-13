@@ -12,15 +12,23 @@
       shadow-sm
       sm:p-8"
   >
-    <div>
-      <h1>Login</h1>
-      <p>
+    <div class="mb-7">
+      <h1
+        class="
+          text-3xl
+          font-semibold
+          tracking-tight
+          text-slate-900"
+      >
+        Sign In
+      </h1>
+      <p class="mt-2 text-sm text-slate-600">
         Enter your email and password below to log in
       </p>
     </div>
 
     <div>
-      @form({ route: 'session.store', method: 'POST' })
+      @form({ route: 'session.store', method: 'POST', class: 'space-y-5' })
         <div>
           @field.root({ name: 'email' })
             @!field.label({ text: 'Email' })
@@ -38,9 +46,9 @@
         </div>
 
         <div>
-          @!button({ text: 'Login', type: 'submit' })
+          @!button({ text: 'Sign In', type: 'submit', class: 'w-full' })
         </div>
       @end
     </div>
-  </div>
+  </section>
 @end
