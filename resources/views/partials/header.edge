@@ -38,7 +38,7 @@
             @!link({ route: 'admin.dashboard', text: 'Admin' })
           @end
           
-          @!avatar({ initials: auth.user.initials })
+          @!avatar({ initials: auth.user.initials, class: 'ml-6' })
           @form({ route: 'session.destroy', method: 'POST' })
             @!button({ text: 'Sign Out' })
           @end
