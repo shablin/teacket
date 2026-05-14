@@ -1,0 +1,11 @@
+@let(classes = [
+    `rounded-xl border border-slate-200
+    bg-white p-6 shadow-sm`
+])
+
+<section {{ $props 
+    .merge({ class: classes })
+    .toAttrs() }}
+>
+    {{{ await $slots.main() }}}
+</section>
