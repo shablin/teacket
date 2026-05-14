@@ -7,6 +7,7 @@
       {{ $props.get('title') || 'Teacket' }}
     </title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('css')
     @stack('dumper')
   </head>
   <body class="min-h-full font-sans text-slate-900 antialiased">
@@ -27,5 +28,6 @@
       {{{ await $slots.main() }}}
     </main>
     @include('partials/footer')
+    @stack('js')
   </body>
 </html>
