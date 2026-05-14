@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en-us" class="h-full bg-slate-100">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{{ $props.get('title') || 'Teacket — Auth' }}</title>
+        @vite(['resource/css/app.css', 'resource/js/app.js'])
+    </head>
+    <body class="grid min-h-full place-items-center p-6 font-sans text-slate-900 antialiased">
+        {{{ await $slots.main() }}}
+    </body>
+</html>
