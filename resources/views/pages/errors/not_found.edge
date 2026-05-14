@@ -1,8 +1,11 @@
-<h1>
-  404 - Page not found
-</h1>
-<p>
-  This template is rendered by the
-  <a href="http://docs.adonisjs.com/guides/exception-handling#status-pages">status pages feature</a>
-  of the global exception handler.
-</p>
+@error_layout({ title: '404 — Teacket' })
+  @ui.card({ class: 'max-w-lg text-center' })
+    <h1 class="mt-4 text-2xl font-semibold">
+      Oops! Where are you?
+    </h1>
+    <p class="mt-2 text-sm text-slate-600">
+      Requested page does not exist or was moved
+    </p>
+    @!link({ route: 'home', text: 'Go home', class: 'mt-6 inline-flex' })
+  @end
+@end
