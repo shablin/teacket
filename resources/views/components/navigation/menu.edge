@@ -1,0 +1,7 @@
+<nav {{ $props
+    .merge({
+        class: ['flex flex-wrap items-center gap-2']
+    }).toAttrs() }}
+>
+    {{{ await $slots.main() }}}
+</nav>
