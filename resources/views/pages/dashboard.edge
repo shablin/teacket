@@ -22,17 +22,21 @@
                             tracking-wide
                             text-slate-500"
                     >
-                        <tr><th class="px-4 py-3">#</th></tr>
-                        <tr><th class="px-4 py-3">Title</th></tr>
-                        <tr><th class="px-4 py-3">Status</th></tr>
-                        <tr><th class="px-4 py-3">Priority</th></tr>
+                        <tr>
+                            <th class="px-4 py-3">#</th>
+                            <th class="px-4 py-3">Title</th>
+                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3">Priority</th>
+                        </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         @each(ticket in tickets)
-                            <tr><td class="px-4 py-3">{{ ticket.number }}</td></tr>
-                            <tr><td class="px-4 py-3">{{ ticket.title }}</td></tr>
-                            <tr><td class="px-4 py-3">{{ ticket.status }}</td></tr>
-                            <tr><td class="px-4 py-3">{{ ticket.priority }}</td></tr>
+                            <tr>
+                                <td class="px-4 py-3">{{ ticket.number }}</td>
+                                <td class="px-4 py-3">{{ ticket.title }}</td>
+                                <td class="px-4 py-3">{{ ticket.status }}</td>
+                                <td class="px-4 py-3">{{ ticket.priority }}</td>
+                            </tr>
                         @end
                     </tbody>
                 @end
@@ -50,17 +54,21 @@
                             tracking-wide
                             text-slate-500"
                     >
-                        <tr><th class="px-4 py-3">#</th></tr>
-                        <tr><th class="px-4 py-3">Title</th></tr>
-                        <tr><th class="px-4 py-3">Status</th></tr>
-                        <tr><th class="px-4 py-3">Priority</th></tr>
+                        <tr>
+                            <th class="px-4 py-3">#</th>
+                            <th class="px-4 py-3">Title</th>
+                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3">Priority</th>
+                        </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         @each(ticket in myAssigneed)
-                            <tr><td class="px-4 py-3">{{ ticket.number }}</td></tr>
-                            <tr><td class="px-4 py-3">{{ ticket.title }}</td></tr>
-                            <tr><td class="px-4 py-3">{{ ticket.status }}</td></tr>
-                            <tr><td class="px-4 py-3">{{ ticket.priority }}</td></tr>
+                            <tr>
+                                <td class="px-4 py-3">{{ ticket.number }}</td>
+                                <td class="px-4 py-3">{{ ticket.title }}</td>
+                                <td class="px-4 py-3">{{ ticket.status }}</td>
+                                <td class="px-4 py-3">{{ ticket.priority }}</td>
+                            </tr>
                         @end
                     </tbody>
                 @end

@@ -15,17 +15,21 @@
                         tracking-wide
                         text-slate-500"
                 >
-                    <tr><th class="px-4 py-3">ID</th></tr>
-                    <tr><th class="px-4 py-3">Name</th></tr>
-                    <tr><th class="px-4 py-3">Email</th></tr>
-                    <tr><th class="px-4 py-3">Role</th></tr>
+                    <tr>
+                        <th class="px-4 py-3">ID</th>
+                        <th class="px-4 py-3">Name</th>
+                        <th class="px-4 py-3">Email</th>
+                        <th class="px-4 py-3">Role</th>
+                    </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @each(user in users)
-                        <tr><td class="px-4 py-3">{{ user.id }}</td></tr>
-                        <tr><td class="px-4 py-3">{{ user.fullName || '-' }}</td></tr>
-                        <tr><td class="px-4 py-3">{{ user.email }}</td></tr>
-                        <tr><td class="px-4 py-3">{{ user.role }}</td></tr>
+                        <tr>
+                            <td class="px-4 py-3">{{ user.id }}</td>
+                            <td class="px-4 py-3">{{ user.fullName || '-' }}</td>
+                            <td class="px-4 py-3">{{ user.email }}</td>
+                            <td class="px-4 py-3">{{ user.role }}</td>
+                        </tr>
                     @end
                 </tbody>
             @end
