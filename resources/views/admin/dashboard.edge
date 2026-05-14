@@ -1,47 +1,62 @@
-@layout()
-    <section class="page-section">
-        <h1>Admin dashboards</h1>
-        <div class="cards cards-compact">
-            <div>
-                <h3>Users</h3>
-                <p>{{ stats.users }}</p>
-            </div>
+@layout({ title: 'Dashboard — Admin | Teacket' })
+    <section class="space-y-6">
+        <h1 class="text-2xl font-semibold">
+            Dashboard
+        </h1>
+        <div class="grid gap-4 sm:grid-cols-3">
+            @ui.card({ class: 'text-center' })
+                <h3 class="text-sm text-slate-500">Users</h3>
+                <p class="mt-2 text-3xl font-semibold">
+                    {{ stats.users }}
+                </p>
+            @end
 
-            <div>
-                <h3>Open tickets</h3>
-                <p>{{ stats.openTickets }}</p>
-            </div>
+            @ui.card({ class: 'text-center' })
+                <h3 class="text-sm text-slate-500">Open</h3>
+                <p class="mt-2 text-3xl font-semibold">
+                    {{ stats.openTickets }}
+                </p>
+            @end
 
-            <div>
-                <h3>Closed tickets</h3>
-                <p>{{ stats.closedTickets }}</p>
-            </div>
-
-            <h2>Recent tickets</h2>
-            <div class="table-wrap compact-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th>Status</th>
-                            <th>Requester</th>
-                            <th>Assignee</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @each(ticket in recentTickets)
-                            <tr>
-                                <td>{{ ticket.number }}</td>
-                                <td>{{ ticket.title }}</td>
-                                <td>{{ ticket.status }}</td>
-                                <td>{{ ticket.requester?.fullName || ticket.requester?.email }}</td>
-                                <td>{{ ticket.assignee?.fullName || '-' }}</td>
-                            </tr>
-                        @end
-                    </tbody>
-                </table>
-            </div>
+            @ui.card({ class: 'text-center' })
+                <h3 class="text-sm text-slate-500">Closed</h3>
+                <p class="mt-2 text-3xl font-semibold">
+                    {{ stats.closedTickets }}
+                </p>
+            @end
         </div>
+
+        @ui.card()
+            <h2 class="mb-4 text-lg font-semibold">
+                Recent
+            </h2>
+            
+            @table.root()
+                <thead
+                    class="
+                        bg-slate-50
+                        text-left
+                        text-xs
+                        uppercase
+                        tracking-wide
+                        text-slate-500"
+                >
+                    <tr><th class="px-4 py-3">#</th></tr>
+                    <tr><th class="px-4 py-3">Title</th></tr>
+                    <tr><th class="px-4 py-3">Status</th></tr>
+                    <tr><th class="px-4 py-3">Requester</th></tr>
+                    <tr><th class="px-4 py-3">Assignee</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    @each(ticket in recentTickets)
+                        <tr><td class="px-4 py-3">{{ ticket.number }}</td></tr>
+                        <tr><td class="px-4 py-3">{{ ticket.title }}</td></tr>
+                        <tr><td class="px-4 py-3">{{ ticket.status }}</td></tr>
+                        <tr><td class="px-4 py-3">{{ ticket.requester?.fullName || ticket.requester?.email }}</td></tr>
+                        <tr><td class="px-4 py-3">{{ ticket.assignee?.fullName || '-' }}</td></tr>
+                    @end
+                </tbody>
+            @end
+        @end
     </section>
 @end
