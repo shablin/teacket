@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en-us" class="h-full bg-slate-100">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{{ $props.get('title') || 'Teacket — Auth' }}</title>
+        @vite(['resource/css/app.css', 'resource/js/app.js'])
+        @stack('css')
+    </head>
+    <body class="min-h-full font-sans text-slate-900 antialised">
+        <main
+            class="
+            mx-auto
+            flex
+            min-h-screen
+            w-full
+            max-w-7xl
+            items-center
+            justify-content
+            px-4
+            py-10
+            sm:px-6
+            lg:px-8"
+        >
+            @include('partials/flash_alerts')
+            {{{ await $slots.main() }}}
+        </main>
+        @stack('js')
+    </body>
+</html>
