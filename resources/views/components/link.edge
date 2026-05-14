@@ -11,12 +11,24 @@
     : undefined
 )
 @let(isActive = request.url() === linkHref)
+
+@let(colors = [
+  'bg-sky-400',
+  'bg-emerald-400',
+  'bg-fuchsia-400',
+  'bg-yellow-500',
+  'bg-indigo-500'
+])
+
+@let(tabColor = colors[Math.floor(Math.random() * colors.length)])
+
 @let(classes = [
   `inline-flex items-center text-sm
   font-medium transition-colors p-4 rounded-t-lg`,
-  isActive ? 'bg-slate-900 text-white font-bold!'
+  isActive ? `${tabColor} text-white font-bold!`
   : 'text-slate-900 hover:bg-slate-200 hover:text-slate-900',
 ])
+
 
 <a {{ $props
   .except(['href', 'text', 'route', 'routeParams', 'routeOptions'])
