@@ -1,54 +1,70 @@
-@layout()
-    <section class="page-section">
-        <h1>Dashboard</h1>
-        <p class="muted">Overview of your recent tickets</p>
-        
-        <h2>Created by me</h2>
-        <div class="table-wrap compact-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Priority</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @each(ticket in tickets)
-                        <tr>
-                            <td>{{ ticket.number }}</td>
-                            <td>{{ ticket.title }}</td>
-                            <td>{{ ticket.status }}</td>
-                            <td>{{ ticket.priority }}</td>
-                        </tr>
-                    @end
-                </tbody>
-            </table>
-        </div>
+@layout({ title: 'Dashboard | Teacket' })
+    <div class="grid gap-6 lg:grid-cols-[16rem,1fr]">
+        <section class="space-y-6">
+            @ui.card()
+                <h1 class="text-2xl font-semibold">
+                    Dashboard
+                </h1>
+                <p class="mt-1 text-sm text-slate-600">
+                    Your work overview
+                </p>
+            @end
 
-        <h2>Assigned to me</h2>
-        <div class="table-wrap compact-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Priority</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @each(ticket in myAssigned)
-                        <tr>
-                            <td>{{ ticket.number }}</td>
-                            <td>{{ ticket.title }}</td>
-                            <td>{{ ticket.status }}</td>
-                            <td>{{ ticket.priority }}</td>
-                        </tr>
-                    @end
-                </tbody>
-            </table>
-        </div>
-    </section>
+            @ui.card()
+                <h2 class="mb-4 text-lg font-semibold">Created by me</h2>
+                @table.root()
+                    <thead
+                        class="
+                            bg-slate-50
+                            text-left
+                            text-xs
+                            uppercase
+                            tracking-wide
+                            text-slate-500"
+                    >
+                        <tr><th class="px-4 py-3">#</th></tr>
+                        <tr><th class="px-4 py-3">Title</th></tr>
+                        <tr><th class="px-4 py-3">Status</th></tr>
+                        <tr><th class="px-4 py-3">Priority</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @each(ticket in tickets)
+                            <tr><td class="px-4 py-3">{{ ticket.number }}</td></tr>
+                            <tr><td class="px-4 py-3">{{ ticket.title }}</td></tr>
+                            <tr><td class="px-4 py-3">{{ ticket.status }}</td></tr>
+                            <tr><td class="px-4 py-3">{{ ticket.priority }}</td></tr>
+                        @end
+                    </tbody>
+                @end
+            @end
+
+            @ui.card()
+                <h2 class="mb-4 text-lg font-semibold">Assigned to me</h2>
+                @table.root()
+                    <thead
+                        class="
+                            bg-slate-50
+                            text-left
+                            text-xs
+                            uppercase
+                            tracking-wide
+                            text-slate-500"
+                    >
+                        <tr><th class="px-4 py-3">#</th></tr>
+                        <tr><th class="px-4 py-3">Title</th></tr>
+                        <tr><th class="px-4 py-3">Status</th></tr>
+                        <tr><th class="px-4 py-3">Priority</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @each(ticket in myAssigneed)
+                            <tr><td class="px-4 py-3">{{ ticket.number }}</td></tr>
+                            <tr><td class="px-4 py-3">{{ ticket.title }}</td></tr>
+                            <tr><td class="px-4 py-3">{{ ticket.status }}</td></tr>
+                            <tr><td class="px-4 py-3">{{ ticket.priority }}</td></tr>
+                        @end
+                    </tbody>
+                @end
+            @end
+        </section>
+    </div>
 @end
