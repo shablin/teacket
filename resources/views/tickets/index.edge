@@ -1,141 +1,209 @@
-@layout()
-    <section class="page-section">
-        <div class="section-header">
-            <h1>Tickets</h1>
-            <a class="button-link" href="{{ route('tickets.create') }}">Create ticket</a>
-        </div>
+@layout({ title: 'Tickets | Teacket'})
+    <section class="space-y-6">
+        @ui.card()
+            <div class="mb-4 flex items-center justify-between">
+                <h1 class="text-2xl font-semibold">
+                    Tickets
+                </h1>
 
-        <form method="GET" class="inline-form compact-form">
-            <input
-                type="text"
-                name="search"
-                value="{{ filters.search || '' }}"
-                placeholder="Search in number, title, description..."
-            />
+                @!link({
+                    route: 'tickets.create',
+                    text: 'Create ticket',
+                    class: `bg-slate-900 rounded-xl! text-white
+                            hover:bg-slate-700 hover:text-white`
+                })
+            </div>
 
-            <input
-                type="text"
-                name="number"
-                value="{{ filters.number || '' }}"
-                placeholder="Ticket number"    
-            />
+            @form({ method: 'GET', class: 'grid gap-4 md:grid-cols-4 lg:grid-cols-4 items-center' })
+                @field.root({ name: 'search' })
+                    @!field.label({ text: 'Search' })
+                    @!input.control({ type: 'text', value: filters.search || '', placeholder: 'Search...' })
+                @end
 
-            <select name="status">
-                <option value="">All statuses</option>
-                @each(ticketStatus in statuses)
-                    <option
-                        value="{{ ticketStatus }}"
-                        selected="{{ filters.status === ticketStatus }}"
-                    >
-                        {{ ticketStatus }}
-                    </option>
+                @field.root({ name: 'number' })
+                    @!field.label({ text: 'Number' })
+                    @!input.control({ type: 'text', value: filters.search || '', placeholder: 'Search by ticket number' })
                 @end
-            </select>
-            <select name="priority">
-                <option value="">All priorities</option>
-                @each(priority in priorities)
-                    <option
-                        value="{{ priority }}"
-                        selected="{{ filters.priority === priority }}"
+
+                @field.root({ name: 'status' })
+                    @!field.label({ text: 'Status' })
+                    <select
+                        name="status"
+                        id="status"
+                        class="
+                            mt-1 block w-full
+                            rounded-md border
+                            border-slate-300
+                            px-3 py-2 text-sm"
                     >
-                        {{ priority }}
-                    </option>
+                        <option value="">All statuses</option>
+                        @each(ticketStatus in statuses)
+                            <option
+                                value="{{ ticketStatus }}"
+                                {{ filters.status === ticketStatus ?
+                                'selected' : '' }}
+                            >
+                                {{ ticketStatus }}
+                            </option>
+                        @end
+                    </select>
                 @end
-            </select>
-            <select name="categoryId">
-                <option value="">All categories</option>
-                @each(category in categories)
-                    <option
-                        value="{{ category.id }}"
-                        selected="{{ String(filters.categoryId) === String(category.id) }}"
+
+                @field.root({ name: 'priority' })
+                    @!field.label({ text: 'Priority' })
+                    <select
+                        name="priority"
+                        id="priority"
+                        class="
+                            mt-1 block w-full
+                            rounded-md border
+                            border-slate-300
+                            px-3 py-2 text-sm"
                     >
-                        {{ category.name }}
-                    </option>
+                        <option value="">All priorities</option>
+                        @each(priority in priorities)
+                            <option
+                                value="{{ priority }}"
+                                {{ filters.priority === priority ?
+                                'selected' : '' }}
+                            >
+                                {{ priority }}
+                            </option>
+                        @end
+                    </select>
                 @end
-            </select>
-            <select name="departmentId">
-                <option value="">All departments</option>
-                @each(department in departments)
-                    <option
-                        value="{{ department.id }}"
-                        selected="{{ String(filters.departmentId) === String(department.id) }}"
+
+                @field.root({ name: 'categoryId' })
+                    @!field.label({ text: 'Category' })
+                    <select
+                        name="categoryId"
+                        id="categoryId"
+                        class="
+                            mt-1 block w-full
+                            rounded-md border
+                            border-slate-300
+                            px-3 py-2 text-sm"
                     >
-                        {{ department.name }}
-                    </option>
+                        <option value="">All categories</option>
+                        @each(category in categories)
+                            <option
+                                value="{{ category }}"
+                                {{ filters.categoryId === String(category.id) ?
+                                'selected' : '' }}
+                            >
+                                {{ category.name }}
+                            </option>
+                        @end
+                    </select>
                 @end
-            </select>
-            <select name="assigneeId">
-                <option value="">All assignees</option>
-                @each(assignee in users)
-                    <option
-                        value="{{ assignee.id }}"
-                        selected="{{ String(filters.assigneeId) === String(assignee.id) }}"
+
+                @field.root({ name: 'departmentId' })
+                    @!field.label({ text: 'Department' })
+                    <select
+                        name="departmentId"
+                        id="departmentId"
+                        class="
+                            mt-1 block w-full
+                            rounded-md border
+                            border-slate-300
+                            px-3 py-2 text-sm"
                     >
-                        {{ assignee.fullName || assignee.email }}
-                    </option>
+                        <option value="">All departments</option>
+                        @each(department in departments)
+                            <option
+                                value="{{ department.id }}"
+                                {{ String(filters.departmentId) === String(department.id) ?
+                                'selected' : '' }}
+                            >
+                                {{ department.name }}
+                            </option>
+                        @end
+                    </select>
                 @end
-            </select>
-            <select name="requesterId">
-                <option value="">All requesters</option>
-                @each(requester in users)
-                    <option
-                        value="{{ requester.id }}"
-                        selected="{{ String(filters.requesterId) === String(requester.id) }}"
+
+                @field.root({ name: 'assigneeId' })
+                    @!field.label({ text: 'Assignee' })
+                    <select
+                        name="assigneeId"
+                        id="assigneeId"
+                        class="
+                            mt-1 block w-full
+                            rounded-md border
+                            border-slate-300
+                            px-3 py-2 text-sm"
                     >
-                        {{ requester.fullName || requester.email }}
-                    </option>
+                        <option value="">All assignees</option>
+                        @each(assignee in users)
+                            <option
+                                value="{{ assignee.id }}"
+                                {{ String(filters.assigneeId) === String(assignee.id) ?
+                                'selected' : '' }}
+                            >
+                                {{ assignee.fullName || assignee.email }}
+                            </option>
+                        @end
+                    </select>
                 @end
-            </select>
+
+                @field.root({ name: 'requesterId' })
+                    @!field.label({ text: 'Requester' })
+                    <select
+                        name="requesterId"
+                        id="requesterId"
+                        class="
+                            mt-1 block w-full
+                            rounded-md border
+                            border-slate-300
+                            px-3 py-2 text-sm"
+                    >
+                        <option value="">All requesters</option>
+                        @each(requester in users)
+                            <option
+                                value="{{ requester.id }}"
+                                {{ String(filters.requesterId) === String(requester.id) ?
+                                'selected' : '' }}
+                            >
+                                {{ requester.fullName || requester.email }}
+                            </option>
+                        @end
+                    </select>
+                @end
+
+                @field.root({ name: 'createdFrom' })
+                    @!field.label({ text: 'Created from' })
+                    @!input.control({type: 'date', value: filters.createdFrom || '' })
+                @end
+
+                @field.root({ name: 'createdTo' })
+                    @!field.label({ text: 'Created to' })
+                    @!input.control({type: 'date', value: filters.createdTo || '' })
+                @end
+
+                @field.root({ name: 'dueFrom' })
+                    @!field.label({ text: 'Due from' })
+                    @!input.control({type: 'date', value: filters.dueFrom || '' })
+                @end
+
+                @field.root({ name: 'dueTo' })
+                    @!field.label({ text: 'Due to' })
+                    @!input.control({type: 'date', value: filters.dueTo || '' })
+                @end
             
-            <label>
-                Created from
-                <input
-                    type="date"
-                    name="createdFrom"
-                    value="{{ filters.createdFrom || '' }}"
-                />
-            </label>
-            <label>
-                Created to
-                <input
-                    type="date"
-                    name="createdTo"
-                    value="{{ filters.createdTo || '' }}"
-                />
-            </label>
-            <label>
-                Due from
-                <input
-                    type="date"
-                    name="dueFrom"
-                    value="{{ filters.dueFrom || '' }}"
-                />
-            </label>
-            <label>
-                Due to
-                <input
-                    type="date"
-                    name="dueTo"
-                    value="{{ filters.dueTo || '' }}"
-                />
-            </label>
+                <div class="col-span-full inline-flex justify-end items-center gap-4 text-sm text-slate-700">
+                    <input type="checkbox" name="includeCommentsSearch" value="1" {{ Boolean(filters.includeCommentSearch) ? 'checked' : '' }} />
+                    <span>Search in comments</span>
+                    
+                    <div class="col-span-full flex items-center gap-2">
+                        @!button({ text: 'Apply filter', type: 'submit' })
+                        @!link({ route: 'tickets.list', text: 'Reset', class: 'font-semibold! text-slate-400! bg-transparent! hover:text-rose-400!' })
+                    </div>
+                </div>
+            @end
+        @end
 
-            <label>
-                <input
-                    type="checkbox"
-                    name="includeCommentsSearch"
-                    value="1"
-                    checked="{{ Boolean(filters.includeCommentSearch) }}"
-                />
-                Search in comments...
-            </label>
-            <button type="submit">Filter</button>
-            <a href="{{ route('tickets.list') }}">Reset</a>
-        </form>
-
-        <div class="table-wrap compact-table">
-            <table>
-                <thead>
+        @ui.card()
+            @table.root()
+                <thead class="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
                     <tr>
                         <th>#</th>
                         <th>Title</th>
@@ -146,41 +214,7 @@
                         <th>Created</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @each(ticket in tickets)
-                        <tr>
-                            <td>{{ ticket.number }}</td>
-                            <td>{{ ticket.title }}</td>
-                            <td><span class="status-chip">{{ ticket.status }}</span></td>
-                            <td>{{ ticket.priority }}</td>
-                            <td>{{ ticket.requester?.fullName || ticket.requester?.email }}</td>
-                            <td>{{ ticket.assignee?.fullName || '—' }}</td>
-                            <td>{{ ticket.createdAt.toFormat('dd LLL yyyy') }}</td>
-                            <td><a href="{{ route('tickets.show', { id: ticket.id }) }}">View</a></td>
-                        </tr>
-                    @end
-                </tbody>
-            </table>
-        </div>
-
-        <div class="pagination">
-            <span>Page {{ tickets.currentPage }} / {{ tickets.lastPage }}</span>
-            <div>
-                @if(tickets.hasPages)
-                    @if(tickets.currentPage > 1)
-                        <a href="
-                            {{ route('tickets.list') }}?page={{ tickets.currentPage - 1 }}
-                            {{ filtersQueryString ? '&' + filtersQueryString : '' }}"
-                        >Previous</a>
-                    @end
-                    @if(tickets.currentPage < tickets.lastPage)
-                        <a href="
-                            {{ route('tickets.list') }}?page={{ tickets.currentPage + 1 }}
-                            {{ filtersQueryString ? '&' + filtersQueryString : '' }}"
-                        >Next</a>
-                    @end
-                @end
-            </div>
-        </div>
+            @end
+        @end
     </section>
 @end
