@@ -1,45 +1,68 @@
-@layout()
-    <section class="page-section">
-        <h1>Create ticket</h1>
-        <form
-            action="{{ route('tickets.store') }}"
-            method="post"
-            class="compact-form"
-        >
-            <label>Title <input name="title" required /></label>
-            <label>Description <textarea name="description"></textarea></label>
-            <label>
-                Priority
-                <select name="priority">
-                    <option value="low">Low</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="high">High</option>
-                    <option value="urgent">Urgent</option>
-                </select>
-            </label>
-            <label>
-                Category
-                <select name="categoryId">
-                    <option value="">None</option>
-                    @each(category in categories)
-                        <option value="{{ category.id }}">{{ category.name }}</option>
-                    @end
-                </select>
-            </label>
-            <label>
-                Department
-                <select name="departmentId">
-                    <option value="">None</option>
-                    @each(department in departments)
-                        <option value="{{ department.id }}">{{ department.name }}</option>
-                    @end
-                </select>
-            </label>
-            <label>
-                Due to date
-                <input type="date" name="dueAt" />
-                <button type="submit">Create</button>
-            </label>
-        </form>
+@layout({ title: 'Create Ticket | Teacket' })
+    <section>
+        @ui.card({ class: 'max-w-full' })
+            <h1 class="mb-5 text-2xl font-semibold">
+                Create ticket
+            </h1>
+
+            @form({ action: route('tickets.store'), method: 'POST', class: 'space-y-4 flex flex-col' })
+                @field.root({ name: 'title' })
+                    @!field.label({ text: 'Title' })
+                    @!input.control({ required: true })
+                    @!field.error()
+                @end
+
+                @field.root({ name: 'description' })
+                    @!field.label({ text: 'Description' })
+                    @!textarea.control()
+                    @!field.error()
+                @end
+
+                <div class="flex flex-row gap-4">
+                    <div class="w-full">
+                        @field.root({ name: 'priority' })
+                            @!field.label({ text: 'Priority' })
+                            @!select.control({
+                                options: [
+                                    { value: 'low', name: 'Low' },
+                                    { value: 'medium', name: 'Medium', isSelected: true },
+                                    { value: 'high', name: 'High' },
+                                    { value: 'urgent', name: 'Urgent' },
+                                ]
+                            })
+                            @!field.error()
+                        @end
+                    </div>
+
+                    <div class="w-full">
+                        @field.root({ name: 'categoryId' })
+                            @!field.label({ text: 'Category' })
+                            <select
+                                name="categoryId"
+                                class="
+                                    mt-1 block w-full
+                                    rounded-md border
+                                    border-slate-300
+                                    px-3 py-2 text-sm"
+                            >
+                                <option value="">None</option>
+                                @each(category in categories)
+                                    <option value="{{ category.id }}">
+                                        {{ category.name }}
+                                    </option>
+                                @end
+                            </select>
+                        @end
+                    </div>
+                </div>
+               
+                @field.root({ name: 'dueAt' })
+                    @!field.label({ text: 'Due date' })
+                    @!input.control({ type: 'date' })
+                    @!field.error()
+                @end
+                @!button({ text: 'Create', type: 'submit' })
+            @end
+        @end
     </section>
 @end
