@@ -5,9 +5,14 @@
                 <h1 class="text-2xl font-semibold">
                     Profile
                 </h1>
-                <p><strong>Name: </strong>{{ user?.fullName || '-' }}</p>
-                <p><strong>Email: </strong>{{ user?.email }}</p>
-                <p><strong>Role: </strong>{{ user?.role || 'employee' }}</p>
+                <div class="flex flex-row gap-4 items-center">
+                    @!avatar({ initials: auth.user.initials, class: 'size-12' })
+                    <div>
+                        <p><strong>Name: </strong>{{ user?.fullName || '-' }}</p>
+                        <p><strong>Email: </strong>{{ user?.email }}</p>
+                        <p><strong>Role: </strong>{{ user?.role || 'employee' }}</p>
+                    </div>
+                </div>
             @end
         </section>
     </div>
