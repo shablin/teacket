@@ -19,7 +19,7 @@
             <h2 class="text-md font-semibold mb-4">
                 Search & Filter
             </h2>
-            @form({ method: 'GET', class: 'grid gap-4 md:grid-cols-4 lg:grid-cols-4 items-center' })
+            @form({ method: 'GET', class: 'grid gap-x-24 gap-y-4 md:grid-cols-4 lg:grid-cols-4 items-center' })
                 @field.root({ name: 'search' })
                     @!field.label({ text: 'Search' })
                     @!input.control({ type: 'text', value: filters.search || '', placeholder: 'Search...' })
